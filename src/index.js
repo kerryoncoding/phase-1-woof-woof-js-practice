@@ -23,13 +23,11 @@ function loadDogs(){
 function displayDetails(data){
    let details = document.getElementById("dog-info")
    details.innerText = ""
-   console.log(data)
    let img = document.createElement("img")
    img.src = data.image
    let h2 = document.createElement("h2")
    h2.innerText = data.name
    let button = document.createElement("button")
-   let switchIt = ""
 
    if (data.isGoodDog){
       button.innerText = "Good Dog!"  
@@ -39,10 +37,9 @@ function displayDetails(data){
   
    details.append(img, h2, button)
    
-   button.addEventListener("click", (e)=>{
-      console.log(data.name)
-      console.log(data.isGoodDog)
+   button.addEventListener("click", ()=>{
       if (data.isGoodDog){
+         console.log("found true")
          fetch(`http://localhost:3000/pups/${data.id}`, {
          method: "PATCH",
          headers: {
@@ -50,19 +47,20 @@ function displayDetails(data){
          }, 
         body: JSON.stringify({isGoodDog: false})
       })
+      .then(resp => resp.json())
+      .then(json => displayDetails(json))
+      
       } else {
+         console.log("found false")
          fetch(`http://localhost:3000/pups/${data.id}`, {
          method: "PATCH",
          headers: {
             "content-type": "application/json"
          }, 
         body: JSON.stringify({isGoodDog: true})
-      })         
+      }) 
+      .then(response => response.json())
+      .then(json => displayDetails(json))       
       }
-         
-      
-      console.log(data.name)
-      console.log(data.isGoodDog)
-      displayDetails(data)
    })
 }
