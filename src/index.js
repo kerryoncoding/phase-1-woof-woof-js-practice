@@ -32,30 +32,37 @@ function displayDetails(data){
    let switchIt = ""
 
    if (data.isGoodDog){
-      button.innerText = "Good Dog!"
-      switchIt = "false"   
+      button.innerText = "Good Dog!"  
    } else {
       button.innerText ="Bad Dog!"
-      switchIt = "true"
    }
   
    details.append(img, h2, button)
    
-   button.addEventListener("click", ()=>{
-   
-      fetch(`http://localhost:3000/pups/${data.id}`, {
+   button.addEventListener("click", (e)=>{
+      console.log(data.name)
+      console.log(data.isGoodDog)
+      if (data.isGoodDog){
+         fetch(`http://localhost:3000/pups/${data.id}`, {
          method: "PATCH",
          headers: {
             "content-type": "application/json"
          }, 
-         body: JSON.stringify({
-            //update isn't working
-            isGoodDog: `${switchIt}`
-         })
-
+        body: JSON.stringify({isGoodDog: false})
       })
-      console.log(data)
-      //displayDetails(data)
-
+      } else {
+         fetch(`http://localhost:3000/pups/${data.id}`, {
+         method: "PATCH",
+         headers: {
+            "content-type": "application/json"
+         }, 
+        body: JSON.stringify({isGoodDog: true})
+      })         
+      }
+         
+      
+      console.log(data.name)
+      console.log(data.isGoodDog)
+      displayDetails(data)
    })
 }
